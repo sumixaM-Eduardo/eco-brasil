@@ -1,15 +1,27 @@
 import psycopg
+from datetime import date
+from decimal import Decimal
 from getpass import getpass
 
-usuario = input("Digite o nome do usuário do banco de dados: ")
-senha = getpass("Digite a senha do banco de dados: ")
+def carregar_dados(conexao, dados):
+        with conexao.cursor() as cursor:
+            for registro in dados:
+                data = registro['data']
+                valor = registro['valor']
+                cursor.execute("""INSERT INTO selic (data, valor)VALUES (%s, %s)ON CONFLICT (data) DO NOTHING;""", (data, valor))
 
-with psycopg.connect(
-    host="localhost",
-    dbname="ecobrasil",
-    user=usuario,
-    password=senha
-) as conexao:
-    with conexao.cursor() as cursor:
-        cursor.execute("""CREATE TABLE IF NOT EXISTS selic(data DATE PRIMARY KEY, valor NUMERIC NOT NULL);""")
-    print("Tabela selic criada ou já existente.")
+if __name__ == "__main__":
+
+    usuario = input("Digite o nome do usuário do banco de dados: ")
+    senha = getpass("Digite a senha do banco de dados: ")
+
+    with psycopg.connect(
+        host="localhost",
+        dbname="ecobrasil",
+        user=usuario,
+        password=senha
+    ) as conexao:
+        with conexao.cursor() as cursor:
+            cursor.execute("""CREATE TABLE IF NOT EXISTS selic(data DATE PRIMARY KEY, valor NUMERIC NOT NULL);""")
+            cursor.execute("""INSERT INTO selic (data, valor)VALUES (%s, %s)ON CONFLICT (data) DO NOTHING;""",(date(2026, 10, 9), Decimal("0.050788")))
+
