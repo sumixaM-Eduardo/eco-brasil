@@ -38,7 +38,7 @@ def transformar_dados(dados):
 
     return registros_transformados
 
-dados = extrair_dados(url)
-
-registros_transformados = transformar_dados(dados)
-print(registros_transformados)
+if __name__ == "__main__":
+    dados = extrair_dados(url)
+    registros_transformados = transformar_dados(dados)
+    print(registros_transformados)
