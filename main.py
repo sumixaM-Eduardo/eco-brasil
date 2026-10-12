@@ -1,12 +1,18 @@
 import psycopg
+import requests
+from config import DB_HOST, DB_NAME
 from getpass import getpass
-
 from extract import extrair_dados, transformar_dados, url
 from database import carregar_dados
 
 
 if __name__ == "__main__":
-    dados = extrair_dados(url)
+    try:
+        dados = extrair_dados(url)
+    except requests.RequestException as error:
+        print(f"Erro ao consultar a API: {error}")
+        raise SystemExit(1)
+    
     registros_transformados = transformar_dados(dados)
 
     print(f"Registros válidos: {len(registros_transformados)}")
@@ -15,8 +21,8 @@ if __name__ == "__main__":
     senha = getpass("Digite a senha do banco de dados: ")
 
     with psycopg.connect(
-        host="localhost",
-        dbname="ecobrasil",
+        host=DB_HOST,
+        dbname=DB_NAME,
         user=usuario,
         password=senha
     ) as conexao:

@@ -1,3 +1,4 @@
+from config import DB_HOST, DB_NAME
 import psycopg
 from datetime import date
 from decimal import Decimal
@@ -16,8 +17,8 @@ if __name__ == "__main__":
     senha = getpass("Digite a senha do banco de dados: ")
 
     with psycopg.connect(
-        host="localhost",
-        dbname="ecobrasil",
+        host=DB_HOST,
+        dbname=DB_NAME,
         user=usuario,
         password=senha
     ) as conexao:
