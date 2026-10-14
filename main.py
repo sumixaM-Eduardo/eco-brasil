@@ -8,8 +8,13 @@ from database import carregar_dados
 from init_db import criar_banco
 
 if __name__ == "__main__":
-    criar_banco()
+
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+    usuario = input("Digite o nome do usuário do banco de dados: ")
+    senha = getpass("Digite a senha do banco de dados: ")
+
+    criar_banco(usuario, senha)
 
     try:
         dados = extrair_dados(url)
@@ -21,8 +26,6 @@ if __name__ == "__main__":
 
     logging.info(f"Registros válidos: {len(registros_transformados)}")
 
-    usuario = input("Digite o nome do usuário do banco de dados: ")
-    senha = getpass("Digite a senha do banco de dados: ")
     try:
         with psycopg.connect(
             host=DB_HOST,

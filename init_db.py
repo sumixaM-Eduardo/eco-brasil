@@ -1,15 +1,9 @@
 import psycopg
-import getpass
 from config import DB_HOST, DB_NAME, DB_PORT
 import logging
 
-def criar_banco():
-
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-    usuario = input("Digite o nome do usuário do banco de dados: ")
-    senha = getpass.getpass("Digite a senha do banco de dados: ")
-    
+def criar_banco(usuario, senha):
+    logging.info("Iniciando a criação do banco de dados e tabelas.")    
     try:
         with psycopg.connect(
             host=DB_HOST,
