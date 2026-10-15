@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+import logging
 import requests 
 
 url = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados/ultimos/10?formato=json"
@@ -21,18 +22,21 @@ def transformar_dados(dados):
     registros_transformados = []
 
     for registro in dados:
-        data = registro['data']
-        valor = registro['valor']
         try:
-            data = datetime.strptime(data, "%d/%m/%Y").date()
-        except ValueError:
-            print(f"Data inválida: {data}. Pulando este registro.")
-            continue    
-        try:
-            valor = Decimal(valor)
-        except InvalidOperation:
-            print(f"Valor inválido: {valor}. Pulando este registro.")
-            continue
+            data = registro['data']
+            valor = registro['valor']
+        except KeyError as e:
+            logging.error(f"Chave ausente: {e}. Pulando este registro.")
+            try:
+                data = datetime.strptime(data, "%d/%m/%Y").date()
+            except ValueError:
+                logging.error(f"Data inválida: {data}. Pulando este registro.")
+                continue    
+            try:
+                valor = Decimal(valor)
+            except InvalidOperation:
+                logging.error(f"Valor inválido: {valor}. Pulando este registro.")
+                continue
 
         registros_transformados.append({ "data": data, "valor": valor })
 
