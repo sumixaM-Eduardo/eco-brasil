@@ -1,7 +1,7 @@
 import psycopg
 import logging
 import requests
-from config import DB_HOST, DB_NAME
+from config import DB_HOST, DB_NAME, DB_PORT
 from getpass import getpass
 from extract import extrair_dados, transformar_dados, url
 from database import carregar_dados
@@ -33,6 +33,7 @@ if __name__ == "__main__":
         with psycopg.connect(
             host=DB_HOST,
             dbname=DB_NAME,
+            port=DB_PORT,
             user=usuario,
             password=senha
         ) as conexao:
