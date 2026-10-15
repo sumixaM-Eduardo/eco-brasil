@@ -27,16 +27,20 @@ def transformar_dados(dados):
             valor = registro['valor']
         except KeyError as e:
             logging.error(f"Chave ausente: {e}. Pulando este registro.")
-            try:
-                data = datetime.strptime(data, "%d/%m/%Y").date()
-            except ValueError:
-                logging.error(f"Data inválida: {data}. Pulando este registro.")
-                continue    
-            try:
-                valor = Decimal(valor)
-            except InvalidOperation:
-                logging.error(f"Valor inválido: {valor}. Pulando este registro.")
-                continue
+            continue
+        try:
+            valor = Decimal(valor)
+        except InvalidOperation:
+            logging.error(f"Valor inválido: {valor}. Pulando este registro.")
+            continue
+        if not valor.is_finite():
+            logging.warning(f"Valor não finito: {valor}. Pulando este registro.")
+            continue
+        try:
+            data = datetime.strptime(data, "%d/%m/%Y").date()
+        except ValueError:
+            logging.error(f"Data inválida: {data}. Pulando este registro.")
+            continue    
 
         registros_transformados.append({ "data": data, "valor": valor })
 
