@@ -14,7 +14,10 @@ if __name__ == "__main__":
     usuario = input("Digite o nome do usuário do banco de dados: ")
     senha = getpass("Digite a senha do banco de dados: ")
 
-    criar_banco(usuario, senha)
+    try:
+        criar_banco(usuario, senha)
+    except psycopg.Error as error:
+        raise SystemExit(1)
 
     try:
         dados = extrair_dados(url)

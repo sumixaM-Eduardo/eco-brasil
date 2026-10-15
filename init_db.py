@@ -36,5 +36,4 @@ def criar_banco(usuario, senha):
                 
         logging.info("Tabelas criadas ou já existentes.")
     except psycopg.Error as error:
-        logging.error(f"Erro ao criar banco de dados e tabelas: {error}")
         raise
