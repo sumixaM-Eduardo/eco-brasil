@@ -8,15 +8,7 @@ url = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados/ultimos/10?formato
 def extrair_dados(url):
     response = requests.get(url, timeout=30)
     response.raise_for_status()  
-    dados = response.json()
-    registros = [] 
-
-    for item in dados:
-        data = item['data']
-        valor = item['valor']
-        registros.append({ "data": data, "valor": valor })
-
-    return registros
+    return response.json()
 
 def transformar_dados(dados):
     registros_transformados = []
@@ -27,6 +19,9 @@ def transformar_dados(dados):
             valor = registro['valor']
         except KeyError as e:
             logging.error(f"Chave ausente: {e}. Pulando este registro.")
+            continue
+        if data is None or valor is None:
+            logging.warning(f"Registro com valor ou data ausente: {registro}. Pulando este registro.")
             continue
         try:
             valor = Decimal(valor)
